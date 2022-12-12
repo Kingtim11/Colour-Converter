@@ -106,5 +106,5 @@ function testFormat(input, input2, input3) {
 }
 
 //Test run
-testFormat('ff2287');
-testFormat(31,255,67);
+testFormat('fa7699');
+testFormat(158,111,92);
