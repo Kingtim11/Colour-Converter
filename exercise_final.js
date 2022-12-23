@@ -54,19 +54,31 @@ the formats so that if you enter HEX color format it returns RGB and if you ente
 function. This parses the string argument and returns an integer converted from the radix of 16. 
 Hex.slice extracts the required parts from the hexidecimal i.e., R extracts indices 0,1.*/
 function hexToRGB(hex) {
+    const hexReg = /^[0-9a-fA-F]+$/;
+
+    if (hex.length !== 6 || !hexReg.test(hex)) {
+        throw new error('Invalid hexadecimal values');
+    }
+
     const R = parseInt(hex.slice(0,2), 16);
     const G = parseInt(hex.slice(2,4), 16);
     const B = parseInt(hex.slice(4,6), 16);
-    console.log(R,G,B);
+
+    return {R,G,B};
 }
 /*RGB to Hex function - RGBtoHex takes the integer inputs from testRGB/testFormat and runs
 each input(r,g,b) throught the toHex function.
 The toHex function takes the variable from RGBtoHex and creates a string in hex format (radix 16).
 The return statement uses a ternary operator to check if the string legnth is equal to one.
 If this is truthy it returns the expression with a zero added and if falsy it returns the original hex(should already be 2 digits).*/
- function RGBtoHex(r,g,b) {
+function RGBtoHex(r,g,b) {
+    if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+        throw new error('Invalid RGB value');
+    }
+
     return toHex(r) + toHex(g) + toHex(b);
 }
+
 function toHex(color) {
     let hex = color.toString(16);
     return hex.length === 1 ? '0' + hex : hex;
@@ -78,31 +90,14 @@ The testHex function uses the regex for hexadecimal and tests this against the i
 it runs hextoRGB function.
 The testRGB function ensures any of the 3 inputs for RGB do not exceed the possible boundaries 0-255
 and if not this runs the RGBtoHex function.*/
-function testHex(hex) {
-    const hexReg = /^[0-9a-fA-F]+$/;
-    if (hexReg.test(hex) === true && hex.length === 6) {
-        return hexToRGB(hex);
-    } else
-        console.log('Error, hexadecimal must only use number 0-10 and letters a-f');
-}
-function testRGB(r, g, b) {
-    if (r < 0 || r > 255) {
-        return 'Error, numbers must be between 0-255';
-    } else if (g < 0 || g > 255) {
-        return 'Error, numbers must be between 0-255';
-    } else if (b < 0 || b > 255) {
-        return 'Error, numbers must be between 0-255';
-    } else
-        return RGBtoHex(r,g,b);
-}
+
 function testFormat(input, input2, input3) {
     if(typeof(input) === 'string') {
-        return testHex(input);
-    }
-    if(typeof(input) === 'number') {
-        return testRGB(input,input2, input3);
+        return hexToRGB(input);
+    } else if(typeof(input) === 'number') {
+        return RGBtoHex(input,input2, input3);
     } else 
-        console.log('Error');
+        throw new error('Invalid input');
 }
 
 //Test run
